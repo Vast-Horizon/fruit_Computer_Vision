@@ -1,0 +1,7 @@
+# Ignore the images folder
+images/
+
+# Ignore subdirectories in the dataset folder
+dataset/apple-mango-banana
+
+model_log/
