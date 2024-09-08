@@ -10,3 +10,7 @@ model_log/
 
 #Ignore PyCharm idea folder
 .idea/
+
+#Ignore venv
+venv/
+CV_training/
