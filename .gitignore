@@ -1,9 +1,12 @@
-# Ignore the images folder
-images/
+# Ignore the images folder except for extra images for testing
+images/*
+!images/extra_test_pics/
 
 # Ignore subdirectories in the dataset folder
 dataset/apple-mango-banana
 
+#Ignore log
 model_log/
 
+#Ignore PyCharm idea folder
 .idea/

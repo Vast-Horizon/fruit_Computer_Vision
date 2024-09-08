@@ -49,7 +49,7 @@ def image_recognition(path):
 
 def batch_recognition():
     # Select the image folder
-    img_folder_path = 'images/my_pic'
+    img_folder_path = 'images/extra_test_pics'
     img_filenames = os.listdir(img_folder_path)
 
     # Prepare a grid to display the images
