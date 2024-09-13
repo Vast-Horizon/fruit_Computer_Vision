@@ -1,5 +1,5 @@
 """
-This sctipt is for verifying the installtion of essential packages.
+This sctipt is for verifying the installtion of essential packages on the Pi
 """
 import cv2
 import tflite_runtime.interpreter as tflite
