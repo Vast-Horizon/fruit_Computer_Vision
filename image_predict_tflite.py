@@ -73,7 +73,8 @@ def batch_recognition(interpreter):
     cols = 5
     rows = (num_images // cols) + int(num_images % cols > 0)
 
-    fig, axes = plt.subplots(rows, cols, figsize=(15, 3 * rows))
+    # Reduce the figure size for smaller subplots
+    fig, axes = plt.subplots(rows, cols, figsize=(12, 2.5 * rows))  # Adjust figsize as needed
     axes = axes.flatten()
 
     for i, img_filename in enumerate(img_filenames):
@@ -91,8 +92,10 @@ def batch_recognition(interpreter):
         axes[i].set_title(f'{top_class} ({top_confidence:.2f})')
         axes[i].axis('off')
 
+    # Adjust layout to ensure no overlapping
     plt.tight_layout()
     plt.show()
+
 
 
 interpreter = load_tflite_model('fine_tuned_model_4.tflite')
