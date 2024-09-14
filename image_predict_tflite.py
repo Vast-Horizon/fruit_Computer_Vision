@@ -72,9 +72,7 @@ def batch_recognition(interpreter):
     num_images = len(img_filenames)
     cols = 5
     rows = (num_images // cols) + int(num_images % cols > 0)
-
-    # Reduce the figure size for smaller subplots
-    fig, axes = plt.subplots(rows, cols, figsize=(12, 2.5 * rows))  # Adjust figsize as needed
+    fig, axes = plt.subplots(rows, cols, figsize=(10, 2 * rows))
     axes = axes.flatten()
 
     for i, img_filename in enumerate(img_filenames):

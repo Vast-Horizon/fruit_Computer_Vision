@@ -60,7 +60,7 @@ def batch_recognition():
     rows = (num_images // cols) + int(num_images % cols > 0)
 
     # Set up the figure for plotting
-    fig, axes = plt.subplots(rows, cols, figsize=(15, 3 * rows))
+    fig, axes = plt.subplots(rows, cols, figsize=(15, 2 * rows))
     axes = axes.flatten()
 
     for i, img_filename in enumerate(img_filenames):
