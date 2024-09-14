@@ -9,6 +9,11 @@ import cv2
 interpreter = tflite.Interpreter(model_path="fine_tuned_model_4.tflite")
 interpreter.allocate_tensors()
 
+# Get input details to check input shape
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+input_shape = input_details[0]['shape']  # Example: [1, 224, 224, 3] or [224, 224, 3]
+
 # Load the class indices
 with open('class_indices.json', 'r') as f:
     class_indices = json.load(f)
@@ -19,8 +24,12 @@ class_labels = list(class_indices.keys())
 def preprocess_frame(frame, target_size=(224, 224)):
     img = cv2.resize(frame, target_size)  # Resize the frame to the target size
     img = img.astype('float32') / 255.0  # Normalize to [0, 1]
-    img = np.expand_dims(img, axis=0)  # Add batch dimension
-    return img
+
+    if len(input_shape) == 3:  # If model expects [height, width, channels]
+        return img
+    elif len(input_shape) == 4:  # If model expects [1, height, width, channels]
+        img = np.expand_dims(img, axis=0)  # Add batch dimension
+        return img
 
 
 # Function to predict top-3 classes for a frame
@@ -28,8 +37,6 @@ def predict_top3_classes(frame):
     processed_frame = preprocess_frame(frame)
 
     # Set input tensor
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
     interpreter.set_tensor(input_details[0]['index'], processed_frame)
 
     # Invoke the interpreter
@@ -65,7 +72,6 @@ def real_time_detection(process_every_n_frames=2):
     # Start the camera
     picam2.start()
 
-    start_time = time.time()
     frame_count = 0
 
     try:
