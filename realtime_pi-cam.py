@@ -1,61 +1,59 @@
-import cv2
+from picamera2 import Picamera2
 import numpy as np
 import tflite_runtime.interpreter as tflite
 import json
 import time
-from picamera2 import Picamera2, Preview
+import cv2
 
-# Load the TFLite model and allocate tensors
+# Load TFLite model and allocate tensors.
 interpreter = tflite.Interpreter(model_path="fine_tuned_model_4.tflite")
 interpreter.allocate_tensors()
 
-# Get input and output tensor details
-input_details = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
-
-# Load class indices
+# Load the class indices
 with open('class_indices.json', 'r') as f:
     class_indices = json.load(f)
 class_labels = list(class_indices.keys())
 
+
 # Function to preprocess the frame for the model
 def preprocess_frame(frame, target_size=(224, 224)):
     img = cv2.resize(frame, target_size)  # Resize the frame to the target size
-    img_array = np.expand_dims(img, axis=0)  # Add batch dimension
-    img_array = img_array.astype('float32') / 255.0  # Rescale to [0, 1]
-    return img_array
+    img = img.astype('float32') / 255.0  # Normalize to [0, 1]
+    img = np.expand_dims(img, axis=0)  # Add batch dimension
+    return img
 
-# Function to calculate and display FPS on the frame
-def draw_fps(frame, start_time, num_frames):
-    fps = num_frames / (time.time() - start_time)
-    cv2.putText(frame, f"FPS: {fps:.2f}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-# Function to predict top-3 classes for a frame using TFLite interpreter
+# Function to predict top-3 classes for a frame
 def predict_top3_classes(frame):
     processed_frame = preprocess_frame(frame)
 
     # Set input tensor
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
     interpreter.set_tensor(input_details[0]['index'], processed_frame)
 
-    # Run inference
+    # Invoke the interpreter
     interpreter.invoke()
 
-    # Get predictions from output tensor
-    predictions = interpreter.get_tensor(output_details[0]['index'])
+    # Get the output tensor
+    predictions = interpreter.get_tensor(output_details[0]['index'])[0]
 
     # Get top-3 predictions
-    top_indices = np.argsort(predictions[0])[-3:][::-1]
+    top_indices = np.argsort(predictions)[-3:][::-1]
     top_classes = [class_labels[i] for i in top_indices]
-    top_confidences = [predictions[0][i] for i in top_indices]
+    top_confidences = [predictions[i] for i in top_indices]
     return list(zip(top_classes, top_confidences))
 
-# Function to draw top-3 predictions on the frame
-def draw_predictions_on_frame(frame, predictions):
-    for i, (label, confidence) in enumerate(predictions):
-        cv2.putText(frame, f'{label} ({confidence:.2f})', (10, 30 + 30 * i),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
 
-# Function to capture and display real-time detection using Pi Camera
+# Function to log the top-3 predictions
+def log_predictions(frame_count, predictions):
+    print(f"Frame {frame_count}, Top 3 Predictions:")
+    for i, (label, confidence) in enumerate(predictions):
+        print(f"{i + 1}: {label} ({confidence:.2f})")
+    print()  # Add a blank line for better readability
+
+
+# Function to run real-time detection and print top-3 predictions
 def real_time_detection(process_every_n_frames=2):
     # Create a Picamera2 object
     picam2 = Picamera2()
@@ -70,27 +68,27 @@ def real_time_detection(process_every_n_frames=2):
     start_time = time.time()
     frame_count = 0
 
-    while True:
-        # Capture frame-by-frame from Pi Camera
-        frame = picam2.capture_array()
+    try:
+        while True:
+            # Capture frame-by-frame from Pi Camera
+            frame = picam2.capture_array()
 
-        frame_count += 1
+            frame_count += 1
 
-        if frame_count % process_every_n_frames == 0:
-            predictions = predict_top3_classes(frame)
-            draw_predictions_on_frame(frame, predictions)
+            if frame_count % process_every_n_frames == 0:
+                # Predict top-3 classes for the current frame
+                predictions = predict_top3_classes(frame)
 
-        draw_fps(frame, start_time, frame_count)
+                # Log the predictions to the console
+                log_predictions(frame_count, predictions)
 
-        # Display the frame using OpenCV
-        cv2.imshow('Real-Time Fruit Detection', frame)
+            # To stop the loop, press Ctrl+C
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    except KeyboardInterrupt:
+        # Stop the camera when interrupted
+        picam2.stop()
+        print("Real-time detection stopped.")
 
-    # Stop the camera and close OpenCV windows
-    picam2.stop()
-    cv2.destroyAllWindows()
 
 # Run the real-time detection
 real_time_detection()
