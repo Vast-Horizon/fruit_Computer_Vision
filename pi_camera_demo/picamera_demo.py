@@ -1,18 +1,22 @@
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 import time
 
 # Create a Picamera2 object
 picam2 = Picamera2()
 
-# Configure the camera to use default preview settings
-picam2.preview_configuration()
+# Set the resolution (e.g., 1920x1080 for HD video)
+config = picam2.create_preview_configuration(main={"size": (1920, 1080)})
+picam2.configure(config)
+
+# Start the camera preview using Qt OpenGL
+picam2.start_preview(Preview.QTGL)
 
 # Start the camera
 picam2.start()
 
-# Preview the camera feed for 10 seconds
+# Preview the camera feed for 20 seconds
 print("Camera preview started... Press Ctrl+C to exit early.")
-time.sleep(10)
+time.sleep(20)
 
 # Stop the camera
 picam2.stop()
