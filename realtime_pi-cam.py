@@ -86,7 +86,7 @@ def real_time_detection(process_every_n_frames=2):
             frame_count += 1
 
             if frame_count % process_every_n_frames == 0:
-                frame = np.expand_dims(frame, axis=0)
+
                 # Predict top-3 classes for the current frame
                 predictions = predict_top3_classes(frame)
 
