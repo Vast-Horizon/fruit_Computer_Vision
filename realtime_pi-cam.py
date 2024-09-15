@@ -23,6 +23,7 @@ class_labels = list(class_indices.keys())
 # Function to preprocess the frame for the model
 def preprocess_frame(frame, target_size=(224, 224)):
     img = cv2.resize(frame, target_size)  # Resize the frame to the target size
+    img = cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)  # Convert to RGB if necessary
     img = img.astype('float32') / 255.0  # Normalize to [0, 1]
 
     # Add batch dimension if necessary
