@@ -30,6 +30,7 @@ class Recognition:
 
         self.frame_count = 0
         self.process_every_n_frames = process_every_n_frames
+        self.running = True  # Flag to control the loop
 
     def preprocess_frame(self, frame, target_size=(224, 224)):
         img = cv2.resize(frame, target_size)  # Resize the frame to the target size
@@ -65,13 +66,13 @@ class Recognition:
         print(f"Frame {self.frame_count}, Top 3 Predictions:")
         for i, (label, confidence) in enumerate(predictions):
             print(f"{i + 1}: {label} ({confidence:.2f})")
-        print()
+        print()  # Add a blank line for readability
 
     def start_recognition(self):
         # Start the camera
         self.picam2.start()
         try:
-            while True:
+            while self.running:
                 # Capture frame-by-frame from Pi Camera
                 frame = self.picam2.capture_array()
                 self.frame_count += 1
@@ -84,12 +85,11 @@ class Recognition:
                     self.log_predictions(predictions)
 
         except KeyboardInterrupt:
-            # Stop the camera when interrupted
+            pass
+        finally:
+            # Stop the camera and clean up
             self.picam2.stop()
             print("Real-time detection stopped.")
 
-
-# Usage example
-if __name__ == "__main__":
-    recognition = Recognition()
-    recognition.start_recognition()
+    def stop(self):
+        self.running = False
