@@ -1,5 +1,5 @@
 """
-This script is indeed to be used on raspberry pi only.
+This script is intended to be used on raspberry pi only.
 It's for testing a pi camera
 """
 from picamera2 import Picamera2, Preview

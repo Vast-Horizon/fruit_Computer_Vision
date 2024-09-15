@@ -1,5 +1,5 @@
 """
-This script is indeed to be used on raspberry pi only.
+This script is intended to be used on raspberry pi only.
 Tested with a Pi Camera IMX219. The top three predictions are printed to the console.
 """
 from picamera2 import Picamera2

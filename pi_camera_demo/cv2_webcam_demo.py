@@ -1,3 +1,7 @@
+"""
+This script is intended to be used on raspberry pi only.
+Tested with a logitech web cam
+"""
 import cv2
 
 def find_cam_index():

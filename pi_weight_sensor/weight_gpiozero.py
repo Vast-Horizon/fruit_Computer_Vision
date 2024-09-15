@@ -1,3 +1,9 @@
+"""
+This script is intended to be used on raspberry pi only.
+This script is a standalone side-project about using HX711 and load cell to accurately measure object weight.
+The reason it's included in this project is that the final goal is to
+                combine ML and weight sensor to calculate the price of fruits the camera sees.
+"""
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 import time
 
