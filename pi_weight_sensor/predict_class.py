@@ -66,7 +66,6 @@ class Recognition:
         for i, (label, confidence) in enumerate(predictions):
             print(f"{i + 1}: {label} ({confidence:.2f})")
         print()
-        return predictions
 
     def start_recognition(self):
         # Start the camera
