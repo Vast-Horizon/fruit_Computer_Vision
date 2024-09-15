@@ -1,3 +1,7 @@
+"""
+This script is indeed to be used on raspberry pi only.
+Tested with a Pi Camera IMX219. The top three predictions are printed to the console.
+"""
 from picamera2 import Picamera2
 import numpy as np
 import tflite_runtime.interpreter as tflite
@@ -78,16 +82,12 @@ def real_time_detection(process_every_n_frames=2):
 
     # Start the camera
     picam2.start()
-
     frame_count = 0
-
     try:
         while True:
             # Capture frame-by-frame from Pi Camera
             frame = picam2.capture_array()
-
             frame_count += 1
-
             if frame_count % process_every_n_frames == 0:
 
                 # Predict top-3 classes for the current frame

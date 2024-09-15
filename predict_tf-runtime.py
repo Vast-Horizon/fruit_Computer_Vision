@@ -1,3 +1,7 @@
+"""
+This script is indeed to be used on raspberry pi only.
+It predicts the fruits in an image or a folder of images.
+"""
 import tflite_runtime.interpreter as tflite
 import numpy as np
 import matplotlib.pyplot as plt
