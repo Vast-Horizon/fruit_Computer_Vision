@@ -1,3 +1,8 @@
+"""
+main function prompts the user to start recognition, runs both the recognition and weight sensing for 1 sec
+You can also use main_continuous function to run forever until KeyboardInterrupt
+"""
+
 import threading
 from predict_class import Recognition
 from weight_class import Weighting
@@ -32,15 +37,11 @@ def main_continuous():
 
 
 def main():
-    # Initialize the classes
     recognition = Recognition()
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
-    # Ask the user to start recognition
     input("Start Recognition? (Hit Enter to start)")
-
-    # Set the duration for how long the recognition and weighting should run
-    n = 0.2  # Default duration (in seconds)
+    n = 1  # Default duration (in seconds)
 
     # Create threads for both processes
     recognition_thread = threading.Thread(target=recognition.start_recognition)
@@ -52,8 +53,6 @@ def main():
 
     # Let the program run for 'n' seconds
     time.sleep(n)
-
-    # Stop both processes after 'n' seconds
     print("Stopping recognition and weighting...")
     recognition.stop()
     weighting.stop()
