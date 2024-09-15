@@ -8,7 +8,7 @@ from picamera2 import Picamera2
 
 class Recognition:
     def __init__(self, model_path="fine_tuned_model_4.tflite", class_indices_path="class_indices.json",
-                 resolution=(1920, 1080), process_every_n_frames=2):
+                 resolution=(1920, 1080), process_every_n_frames=4):
         # Load TFLite model and allocate tensors.
         self.interpreter = tflite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
@@ -63,10 +63,9 @@ class Recognition:
         return list(zip(top_classes, top_confidences))
 
     def log_predictions(self, predictions):
-        print(f"Frame {self.frame_count}, Top 3 Predictions:")
         for i, (label, confidence) in enumerate(predictions):
             print(f"{i + 1}: {label} ({confidence:.2f})")
-        print()  # Add a blank line for readability
+        print()
 
     def start_recognition(self):
         # Start the camera

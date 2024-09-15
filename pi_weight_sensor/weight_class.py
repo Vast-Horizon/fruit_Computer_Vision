@@ -39,8 +39,8 @@ class Weighting:
             while self.running:
                 value = self.read_HX711()
                 corrected_value = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
-                print(f"Raw: {value}, Corrected: {corrected_value}g")
-                time.sleep(0.5)
+                print(f"{corrected_value}g")
+                time.sleep(0.1)
         except KeyboardInterrupt:
             pass
         finally:
