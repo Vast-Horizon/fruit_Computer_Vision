@@ -1,6 +1,6 @@
 import threading
-from predict_class import Recognition  # Assuming the Recognition class is in recognition_module.py
-from weight_class import Weighting  # Assuming the Weighting class is in weighting_module.py
+from predict_class import Recognition
+from weight_class import Weighting
 
 # Initialize instances of the classes
 recognition = Recognition()
