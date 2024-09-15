@@ -25,11 +25,11 @@ def preprocess_frame(frame, target_size=(224, 224)):
     img = cv2.resize(frame, target_size)  # Resize the frame to the target size
     img = img.astype('float32') / 255.0  # Normalize to [0, 1]
 
-    if len(input_shape) == 3:  # If model expects [height, width, channels]
-        return img  # No batch dimension needed
-    elif len(input_shape) == 4:  # If model expects [1, height, width, channels]
-        img = np.expand_dims(img, axis=0)  # Add batch dimension
-        return img
+    # Add batch dimension if necessary
+    if len(input_shape) == 4:
+        img = np.expand_dims(img, axis=0)
+
+    return img
 
 
 # Function to predict top-3 classes for a frame
@@ -39,6 +39,8 @@ def predict_top3_classes(frame):
     # Remove batch dimension if present (ensure 3D input)
     if len(processed_frame.shape) == 4 and len(input_shape) == 3:
         processed_frame = processed_frame[0]
+
+    print("Processed frame shape:", processed_frame.shape)
 
     # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], processed_frame)
