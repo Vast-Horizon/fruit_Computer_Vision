@@ -40,7 +40,7 @@ class Weighting:
                 value = self.read_HX711()
                 corrected_value = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
                 print(f"{corrected_value}g")
-                time.sleep(0.1)
+                time.sleep(0.2)
         except KeyboardInterrupt:
             pass
         finally:
