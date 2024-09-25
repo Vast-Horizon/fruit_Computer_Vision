@@ -3,14 +3,14 @@ import random
 import time
 
 # Replace with your Ubidots Token
-UBIDOTS_TOKEN = "your-ubidots-token"
+UBIDOTS_TOKEN = "BBUS-zFNs6h6YSIb6EO1Bbk676Ab5thPCH6"
 
 # Initialize the API client
 api = ApiClient(token=UBIDOTS_TOKEN)
 
 # Replace 'your-device-label' and 'your-variable-label' with your specific labels
-device = api.get_device('your-device-label')
-temperature_variable = device.get_variable('your-variable-label')
+device = api.get_device('cybercart')
+temperature_variable = device.get_variable('numbers')
 
 def send_data():
     # Simulate temperature data or use a sensor to get real data
