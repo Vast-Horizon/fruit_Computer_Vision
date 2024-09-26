@@ -5,15 +5,15 @@ import random
 
 TOKEN = "BBUS-zFNs6h6YSIb6EO1Bbk676Ab5thPCH6"  # Put your TOKEN here
 DEVICE_LABEL = "cybercart"  # Put your device label here
-VARIABLE_LABEL_1 = "numbers"  # Put your first variable label here
-VARIABLE_LABEL_2 = "humidity"  # Put your second variable label here
-VARIABLE_LABEL_3 = "position"  # Put your second variable label here
+VARIABLE_LABEL_1 = "price"  # Put your first variable label here
+VARIABLE_LABEL_2 = "weight"  # Put your second variable label here
+VARIABLE_LABEL_3 = "predict1"  # Put your second variable label here
 
 
 def build_payload(variable_1, variable_2, variable_3):
     # Creates two random values for sending data
-    value_1 = random.randint(-10, 50)
-    value_2 = random.randint(0, 85)
+    value_1 = random.randint(10, 50)
+    value_2 = random.randint(0, 10)
 
     # Creates a random gps coordinates
     lat = random.randrange(34, 36, 1) + \
