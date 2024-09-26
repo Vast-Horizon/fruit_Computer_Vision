@@ -6,6 +6,8 @@ import tflite_runtime.interpreter as tflite
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import MFRC522
+from gpiozero import OutputDevice
 
 
 print("OpenCV version:", cv2.__version__)
