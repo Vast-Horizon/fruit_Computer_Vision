@@ -18,70 +18,75 @@ signal.signal(signal.SIGINT, end_read)
 # Create an object of the class MFRC522
 MIFAREReader = MFRC522.MFRC522()
 
-# This loop keeps checking for chips. If one is near it will get the UID and authenticate
-while continue_reading:
+# Function to write data to a block
+def write_data_to_block(block, data):
+    # Ensure data fits within 16 bytes
+    if len(data) > 16:
+        print("Data too long for the block. Max 16 bytes allowed.")
+        return
 
-    # Scan for cards    
-    (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-
-    # If a card is found
-    if status == MIFAREReader.MI_OK:
-        print("Card detected")
+    # Fill the remaining bytes with 0x00 to make data 16 bytes
+    while len(data) < 16:
+        data.append(0x00)
     
-    # Get the UID of the card
-    (status, uid) = MIFAREReader.MFRC522_Anticoll()
+    MIFAREReader.MFRC522_Write(block, data)
 
-    # If we have the UID, continue
-    if status == MIFAREReader.MI_OK:
+# Main function
+def main():
+    global continue_reading
 
-        # Print UID
-        print("Card read UID: " + str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3]))
+    # Ask the user for item information
+    item_name = input("Enter the item name: ")
+    price = input("Enter the item price: ")
 
-        # Check if the UID matches the specific one (66, 190, 199, 247)
-        if uid[0] == 66 and uid[1] == 190 and uid[2] == 199 and uid[3] == 247:
-            print("This is the correct card.")
+    # Combine item name and price into a single string (max 16 characters)
+    item_info = f"{item_name[:10]} ${price[:5]}"
 
-            # This is the default key for authentication
-            key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+    # Convert to a list of ASCII values
+    data_to_write = [ord(x) for x in item_info]
 
-            # Select the scanned tag
-            MIFAREReader.MFRC522_SelectTag(uid)
+    while continue_reading:
+        # Scan for cards    
+        (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
 
-            # Authenticate for sector 8
-            status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+        # If a card is found
+        if status == MIFAREReader.MI_OK:
+            print("Card detected")
 
-            # Check if authenticated
+            # Get the UID of the card
+            (status, uid) = MIFAREReader.MFRC522_Anticoll()
+
+            # If we have the UID, continue
             if status == MIFAREReader.MI_OK:
+                print("Writing data to the tag...")
 
-                # Prepare data to write "Apple" and "2.99"
-                # Convert the string "Apple" and "2.99" to bytes and pad to 16 bytes each
-                apple_data = [ord(c) for c in "Apple"] + [0x00] * (16 - len("Apple"))
-                price_data = [ord(c) for c in "2.99"] + [0x00] * (16 - len("2.99"))
+                # This is the default key for authentication
+                key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 
-                # Write "Apple" to block 8
-                print("Writing 'Apple' to block 8...")
-                MIFAREReader.MFRC522_Write(8, apple_data)
+                # Select the scanned tag
+                MIFAREReader.MFRC522_SelectTag(uid)
 
-                # Verify by reading block 8
-                print("Verifying 'Apple' in block 8:")
-                MIFAREReader.MFRC522_Read(8)
+                # Authenticate with block 8 (or any other block where you want to store data)
+                status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
 
-                # Write "2.99" to block 9
-                print("Writing '2.99' to block 9...")
-                MIFAREReader.MFRC522_Write(9, price_data)
+                # Check if authenticated
+                if status == MIFAREReader.MI_OK:
+                    print("Authenticated successfully.")
+                    
+                    # Write item information to block 8
+                    write_data_to_block(8, data_to_write)
 
-                # Verify by reading block 9
-                print("Verifying '2.99' in block 9:")
-                MIFAREReader.MFRC522_Read(9)
-
-                # Stop Crypto1 when done
-                MIFAREReader.MFRC522_StopCrypto1()
-
-                # End reading after writing to the card
-                continue_reading = False
-
+                    print(f"Item '{item_name}' with price '{price}' written to tag.")
+                    
+                    # Stop crypto and halt
+                    MIFAREReader.MFRC522_StopCrypto1()
+                    break
+                else:
+                    print("Authentication error")
             else:
-                print("Authentication error")
-
+                print("Failed to read the card")
         else:
-            print("This is not the correct card.")
+            print("Waiting for card...")
+
+if __name__ == "__main__":
+    main()
