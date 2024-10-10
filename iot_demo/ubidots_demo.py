@@ -5,26 +5,34 @@ import random
 
 TOKEN = "BBUS-zFNs6h6YSIb6EO1Bbk676Ab5thPCH6"  # Put your TOKEN here
 DEVICE_LABEL = "cybercart"  # Put your device label here
-VARIABLE_LABEL_1 = "price"  # Put your first variable label here
-VARIABLE_LABEL_2 = "weight"  # Put your second variable label here
-VARIABLE_LABEL_3 = "predict1"  # Put your second variable label here
 recognition1_label = 'predict1'
 recognition2_label = 'predict2'
 recognition3_label = 'predict3'
-rfidcheck_label = 'rfidchecked'
-cvcheck_label = 'cvchecked'
+detecting_label = 'detecting'
+selection_label = 'selection'
+re_detect_label = 're_detect'
+weight_label = 'weight'
+
+selection_state = 0
+re_detect_state = 0
+
+def get_request(device, variable):
+    try:
+        url = "http://industrial.api.ubidots.com/"
+        url = url + \
+            "api/v1.6/devices/{0}/{1}/".format(device, variable)
+        headers = {"X-Auth-Token": TOKEN, "Content-Type": "application/json"}
+        req = requests.get(url=url, headers=headers)
+        return req.json()['last_value']['value']
+    except:
+        pass
 
 def build_payload(variable_1, variable_2, variable_3):
-    # Creates two random values for sending data
-    # value_1 = random.randint(10, 50)
-    # value_2 = random.randint(0, 10)
 
     predict1 = 'tomato'
-    predict2 = 'banana'
-    predict3 = 'apple'
-
+    random_weights = random.randint(1, 10)
     payload = {variable_1: {"value": 99, "context": {"predict1": predict1.capitalize()}},
-               variable_2: {"value": 1}, variable_3:{"value": 1}
+               variable_2: {"value": random_weights}, variable_3:{"value": 1}
                }
 
     return payload
@@ -58,7 +66,7 @@ def post_request(payload):
 
 def main():
     payload = build_payload(
-        recognition1_label, rfidcheck_label, cvcheck_label)
+        recognition1_label, weight_label, detecting_label)
 
     print("[INFO] Attemping to send data")
     post_request(payload)
@@ -67,5 +75,11 @@ def main():
 
 if __name__ == '__main__':
     while (True):
+        main()
+        selection_state = get_request(DEVICE_LABEL, selection_label)
+        if selection_state == 1:
+            re_detect_state = 0
+        if re_detect_state == 1:
+            selection_state = 0
         main()
         time.sleep(5)
