@@ -7,7 +7,7 @@ import threading
 from predict_class import Recognition
 from weight_class import Weighting
 import time
-
+import requests
 
 def main_continuous():
     # Initialize the classes

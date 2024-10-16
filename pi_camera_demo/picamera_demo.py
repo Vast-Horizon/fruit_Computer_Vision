@@ -1,6 +1,6 @@
 """
 This script is intended to be used on raspberry pi only.
-It's for testing a pi camera
+It's for testing a pi camera such as IMX219
 """
 from picamera2 import Picamera2, Preview
 import time
