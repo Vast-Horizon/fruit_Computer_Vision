@@ -7,6 +7,17 @@ class UbidotsClient:
         self.token = token
         self.device_label = device_label
         self.headers = {"X-Auth-Token": self.token, "Content-Type": "application/json"}
+        self.payload_dict_default = {
+        "predict1": "tomato",
+        "detecting": 0,
+        "selection": 0,
+        "re_detect": 0,
+        "weight": 5,
+        "price": 0,
+        "total": 0,
+        "payment": 0,
+        "results": ["apple"]
+        }
 
     def get_request(self, variable):
         """Fetch the last value of a specified variable from Ubidots."""
@@ -19,21 +30,12 @@ class UbidotsClient:
             print(f"Error in get_request: {e}")
             return None
 
-    def build_payload(self, payload_dict):
+    def format_payload(self, payload_dict):
         """Build the payload for sending to Ubidots."""
-        random_num = random.randint(1, 10)
-        payload_dict['weight'] = random_num
-
-        fruits = ["apple", "banana", "orange", "grape", "strawberry", "pineapple", "peas", "soy beans", "watermelon"]
-        random_fruit = random.choice(fruits)
-        payload_dict["results"].append(random_fruit)
-        results_string = ", ".join(payload_dict["results"])
-
-        payload_dict["predict1"] = random_fruit
 
         payload = {
             'predict1': {"value": 99, "context": {"predict1": payload_dict['predict1'].capitalize()}},
-            'results': {"value": 99, "context": {"results": results_string}},
+            'results': {"value": 99, "context": {"results": payload_dict['results']}},
             'weight': {"value": payload_dict['weight']},
             'selection': {"value": payload_dict['selection']},
             'detecting': {"value": payload_dict['detecting']},
@@ -66,7 +68,7 @@ class UbidotsClient:
 
     def send_data(self, payload_dict):
         """Build the payload and send data to Ubidots."""
-        payload = self.build_payload(payload_dict)
+        payload = self.format_payload(payload_dict)
         print("[INFO] Attempting to send data")
         return self.post_request(payload)
 
@@ -87,9 +89,22 @@ if __name__ == '__main__':
         "price": 0,
         "total": 0,
         "payment": 0,
-        "results": ["apple"]
+        "results": "tomato, apple"
     }
-
+    fruits_list = []
     while True:
+        # Random weight
+        random_num = random.randint(1, 10)
+        payload_dict['weight'] = random_num
+
+        # Random fruits
+        fruits = ["apple", "banana", "orange", "grape", "strawberry", "pineapple", "peas", "soy beans", "watermelon"]
+        random_fruit = random.choice(fruits)
+        fruits_list.append(random_fruit)
+        results_string = ", ".join(fruits_list)
+        payload_dict['results'] = results_string
+        payload_dict["predict1"] = random_fruit
+
+        # Send to Ubidots
         client.send_data(payload_dict)
-        time.sleep(5)
+        time.sleep(2)

@@ -1,10 +1,13 @@
 import numpy as np
-import tflite_runtime.interpreter as tflite
 import json
 import time
 import cv2
-from picamera2 import Picamera2
 
+try:
+    from picamera2 import Picamera2
+    import tflite_runtime.interpreter as tflite
+except ModuleNotFoundError:
+    print('Recognition Class not in raspberry Pi environment')
 
 class Recognition:
     def __init__(self, model_path="fine_tuned_model_4.tflite", class_indices_path="class_indices.json",
@@ -43,7 +46,7 @@ class Recognition:
 
         return img
 
-    def predict_top3_classes(self, frame):
+    def prpredict_top_class(self, frame):
         processed_frame = self.preprocess_frame(frame)
 
         # Set input tensor
@@ -78,7 +81,7 @@ class Recognition:
 
                 if self.frame_count % self.process_every_n_frames == 0:
                     # Predict top-3 classes for the current frame
-                    predictions = self.predict_top3_classes(frame)
+                    predictions = self.prpredict_top_class(frame)
 
                     # Log the predictions to the console
                     self.log_predictions(predictions)

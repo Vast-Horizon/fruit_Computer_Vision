@@ -1,13 +1,22 @@
 import time
-from gpiozero import DigitalInputDevice, DigitalOutputDevice
+import random
+try:
+    from gpiozero import DigitalInputDevice, DigitalOutputDevice
+except ModuleNotFoundError:
+    print('Weighting Class Not in raspberry Pi environment')
 
 class Weighting:
     def __init__(self, calibration_factor, dt_pin=14, sck_pin=15):
-        self.dt = DigitalInputDevice(dt_pin)
-        self.sck = DigitalOutputDevice(sck_pin)
         self.calibration_factor = calibration_factor
         self.offset_factor = 49.5
         self.running = True  # Flag to control the loop
+        self.current_weight = 0  # Store the latest weight
+        self.simulation_mode = False
+        try:
+            self.dt = DigitalInputDevice(dt_pin)
+            self.sck = DigitalOutputDevice(sck_pin)
+        except NameError:
+            pass
 
     def read_HX711(self):
         count = 0
@@ -35,16 +44,31 @@ class Weighting:
 
     def start(self):
         try:
-            tare = self.zero_scale()
+            if not self.simulation_mode:
+                tare = self.zero_scale()
+
             while self.running:
-                value = self.read_HX711()
-                corrected_value = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
-                print(f"{corrected_value}g")
-                time.sleep(0.2)
+                if self.simulation_mode:
+                    self.simulate_weight_output()
+                else:
+                    value = self.read_HX711()
+                    self.current_weight = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
+                    #print(f"{self.current_weight}g")
+                    time.sleep(0.2)
         except KeyboardInterrupt:
             pass
         finally:
             print("Weighting stopped.")
 
+    def get_weight(self):
+        return self.current_weight
+
     def stop(self):
         self.running = False
+
+    def simulate_weight_output(self):
+        """Simulates random weight readings for testing purposes."""
+        self.current_weight = random.uniform(1, 10)
+
+    def testing_only(self, enable_simulation=True):
+        self.simulation_mode = enable_simulation
