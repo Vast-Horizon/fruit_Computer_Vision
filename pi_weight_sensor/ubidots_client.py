@@ -16,8 +16,11 @@ class UbidotsClient:
         "price": 0,
         "total": 0,
         "payment": 0,
-        "results": ["apple"]
+        "results": "tomato, apple"
         }
+
+    def get_default_payload(self):
+        return self.payload_dict_default
 
     def get_request(self, variable):
         """Fetch the last value of a specified variable from Ubidots."""

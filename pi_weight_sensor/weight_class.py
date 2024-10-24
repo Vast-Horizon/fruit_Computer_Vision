@@ -3,7 +3,7 @@ import random
 try:
     from gpiozero import DigitalInputDevice, DigitalOutputDevice
 except ModuleNotFoundError:
-    print('Weighting Class Not in raspberry Pi environment')
+    print('Weighting Class is Not in raspberry Pi environment')
 
 class Weighting:
     def __init__(self, calibration_factor, dt_pin=14, sck_pin=15):
