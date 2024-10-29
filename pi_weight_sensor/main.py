@@ -48,7 +48,7 @@ def main():
 
     # Enable simulation modes for testing
     weighting.testing_only(enable_simulation=True)
-    recognition.enable_simulation(enable_simulation=True)
+    recognition.enable_simulation(enable_simulation=False)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
