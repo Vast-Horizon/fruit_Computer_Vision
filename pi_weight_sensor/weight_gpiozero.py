@@ -78,7 +78,7 @@ try:
     tare = zero_scale()
     calibration_factor = 0.00011765484757443882
     offset_factor = 49.5
-    tare_Flag = True
+    tare_Flag = False
 
     while True:
         value = read_HX711()
@@ -86,7 +86,7 @@ try:
             corrected_value = abs(value - tare) * calibration_factor/offset_factor * 1000
             print("Raw:", value, " Corrected:", corrected_value, "g")
         if not tare_Flag:
-            corrected_value = abs(value - 19948.6) * calibration_factor / offset_factor * 1000
+            corrected_value = abs(value - 8392790) * calibration_factor / offset_factor * 1000
             print("Raw:", value, " Corrected:", corrected_value, "g")
         time.sleep(0.5)
 
