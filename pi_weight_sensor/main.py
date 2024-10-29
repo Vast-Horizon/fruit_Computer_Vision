@@ -43,31 +43,31 @@ def main_continuous():
 
 
 def main():
-    recognition = Recognition()
+    #recognition = Recognition()
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
     weighting.testing_only(enable_simulation=True)
-    recognition.enable_simulation(enable_simulation=False)
+    #recognition.enable_simulation(enable_simulation=False)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
 
     # Create threads for both processes
-    recognition_thread = threading.Thread(target=recognition.start_recognition)
+    #recognition_thread = threading.Thread(target=recognition.start_recognition)
     weighting_thread = threading.Thread(target=weighting.start)
 
     # Start both threads
-    recognition_thread.start()
+    #recognition_thread.start()
     weighting_thread.start()
 
     for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
         current_weight = weighting.get_weight()
         print(f"Current Weight: {current_weight}g")
 
-        top_prediction = recognition.get_top_prediction()
-        if top_prediction:
-            print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
+        # top_prediction = recognition.get_top_prediction()
+        # if top_prediction:
+        #     print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
 
         payload_dict['weight'] = current_weight
         client.send_data(payload_dict)
@@ -77,11 +77,11 @@ def main():
 
     # time.sleep(n)
     print("Stopping recognition and weighting...")
-    recognition.stop()
+    #recognition.stop()
     weighting.stop()
 
     # Wait for both threads to finish
-    recognition_thread.join()
+    #recognition_thread.join()
     weighting_thread.join()
 
     print("Program ended.")
