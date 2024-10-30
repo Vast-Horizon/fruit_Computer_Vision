@@ -71,7 +71,7 @@ def main():
 
         payload_dict['weight'] = current_weight
         print(payload_dict)
-        #client.send_data(payload_dict)
+        client.send_data(payload_dict)
         if current_weight > 0.2:
             pass #tigger the recognition_thread
         time.sleep(0.2)  # Same delay as in Weighting class
