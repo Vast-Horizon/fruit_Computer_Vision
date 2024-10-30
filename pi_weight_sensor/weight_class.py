@@ -5,6 +5,8 @@ try:
 except ModuleNotFoundError:
     print('Weighting Class is Not in raspberry Pi environment')
 
+tare_Flag = False
+
 class Weighting:
     def __init__(self, calibration_factor, dt_pin=14, sck_pin=15):
         self.calibration_factor = calibration_factor
@@ -44,6 +46,7 @@ class Weighting:
 
     def start(self):
         try:
+            tare = 0
             if not self.simulation_mode:
                 tare = self.zero_scale()
 
@@ -52,8 +55,10 @@ class Weighting:
                     self.simulate_weight_output()
                 else:
                     value = self.read_HX711()
-                    self.current_weight = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
-                    #print(f"{self.current_weight}g")
+                    if tare_Flag:
+                        self.current_weight = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
+                    if not tare_Flag:
+                        self.current_weight = abs(value - 8392790) * self.calibration_factor / self.offset_factor * 1000
                     time.sleep(0.2)
         except KeyboardInterrupt:
             pass
