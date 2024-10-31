@@ -43,23 +43,23 @@ def main_continuous():
 
 
 def main():
-    #recognition = Recognition()
+    recognition = Recognition()
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
     weighting.testing_only(enable_simulation=False)
-    #recognition.enable_simulation(enable_simulation=False)
+    recognition.enable_simulation(enable_simulation=True)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
 
     # Create threads for both processes
-    #recognition_thread = threading.Thread(target=recognition.start_recognition)
+    recognition_thread = threading.Thread(target=recognition.start_recognition)
     weighting_thread = threading.Thread(target=weighting.start)
     stop_event = threading.Event()
 
     # Start both threads
-    #recognition_thread.start()
+    recognition_thread.start()
     weighting_thread.start()
 
     try:
@@ -88,11 +88,11 @@ def main():
 
     # time.sleep(n)
     print("Stopping recognition and weighting...")
-    #recognition.stop()
+    recognition.stop()
     weighting.stop()
 
     # Wait for both threads to finish
-    #recognition_thread.join()
+    recognition_thread.join()
     weighting_thread.join()
 
     print("Program ended.")
