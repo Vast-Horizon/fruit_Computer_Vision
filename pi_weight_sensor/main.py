@@ -68,8 +68,6 @@ def main():
         print(payload_dict)
         client.send_data(payload_dict)
 
-        if input() == "":
-            break
 
     # for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
     #     # top_prediction = recognition.get_top_prediction()
