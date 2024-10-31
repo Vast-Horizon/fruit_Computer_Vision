@@ -61,20 +61,24 @@ def main():
     #recognition_thread.start()
     weighting_thread.start()
 
-    for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
+    while 1:
         current_weight = weighting.get_weight()
         print(f"Current Weight: {current_weight}g")
-
-        # top_prediction = recognition.get_top_prediction()
-        # if top_prediction:
-        #     print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
-
         payload_dict['weight'] = current_weight
         print(payload_dict)
         client.send_data(payload_dict)
-        if current_weight > 0.2:
-            pass #tigger the recognition_thread
-        time.sleep(0.2)  # Same delay as in Weighting class
+
+        if input() == "":
+            break
+
+    # for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
+    #     # top_prediction = recognition.get_top_prediction()
+    #     # if top_prediction:
+    #     #     print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
+    #
+    #     if current_weight > 0.2:
+    #         pass #tigger the recognition_thread
+    #     time.sleep(0.2)  # Same delay as in Weighting class
 
     # time.sleep(n)
     print("Stopping recognition and weighting...")
