@@ -63,7 +63,7 @@ def main():
     weighting_thread.start()
 
     try:
-        # Continuously fetch the weight reading until the Enter key is pressed again
+        # Continuously fetch the weight reading until Keyboard Interrupt
         while not stop_event.is_set():
             current_weight = weighting.get_weight()
             print(f"Current Weight: {current_weight}g")
@@ -74,7 +74,7 @@ def main():
             time.sleep(0.2)
 
     except KeyboardInterrupt:
-        stop_event.set()  # Ensure the program stops on interrupt
+        stop_event.set()
 
 
     # for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
