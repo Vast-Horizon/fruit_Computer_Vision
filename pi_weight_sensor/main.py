@@ -61,7 +61,7 @@ def main():
     #recognition_thread.start()
     weighting_thread.start()
 
-    while 1:
+    for i in range (10):
         current_weight = weighting.get_weight()
         print(f"Current Weight: {current_weight}g")
         payload_dict['weight'] = current_weight
