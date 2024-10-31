@@ -47,7 +47,7 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weighting.testing_only(enable_simulation=False)
+    weighting.testing_only(enable_simulation=True)
     #recognition.enable_simulation(enable_simulation=False)
 
     input("Start Recognition? (Hit Enter to start)")
@@ -68,7 +68,7 @@ def main():
             current_weight = weighting.get_weight()
             print(f"Current Weight: {current_weight}g")
 
-            payload_dict = {'weight': current_weight}
+            payload_dict['weight'] = current_weight
             print(payload_dict)
             client.send_data(payload_dict)  # Send to Ubidots dashboard
             time.sleep(0.2)
