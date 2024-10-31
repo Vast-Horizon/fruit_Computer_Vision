@@ -56,17 +56,29 @@ def main():
     # Create threads for both processes
     #recognition_thread = threading.Thread(target=recognition.start_recognition)
     weighting_thread = threading.Thread(target=weighting.start)
+    stop_event = threading.Event()
 
     # Start both threads
     #recognition_thread.start()
     weighting_thread.start()
 
-    for i in range (10):
-        current_weight = weighting.get_weight()
-        print(f"Current Weight: {current_weight}g")
-        payload_dict['weight'] = current_weight
-        print(payload_dict)
-        client.send_data(payload_dict)
+    try:
+        # Continuously fetch the weight reading until the Enter key is pressed again
+        while not stop_event.is_set():
+            current_weight = weighting.get_weight()
+            print(f"Current Weight: {current_weight}g")
+
+            payload_dict = {'weight': current_weight}
+            print(payload_dict)
+            client.send_data(payload_dict)  # Send to Ubidots dashboard
+            time.sleep(0.2)
+
+            # Non-blocking check for Enter key press to stop
+            if input("Press Enter to stop:\n") == "":
+                stop_event.set()
+
+    except KeyboardInterrupt:
+        stop_event.set()  # Ensure the program stops on interrupt
 
 
     # for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
