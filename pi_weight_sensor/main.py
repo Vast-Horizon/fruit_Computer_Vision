@@ -73,10 +73,6 @@ def main():
             client.send_data(payload_dict)  # Send to Ubidots dashboard
             time.sleep(0.2)
 
-            # Non-blocking check for Enter key press to stop
-            if input("Press Enter to stop:\n") == "":
-                stop_event.set()
-
     except KeyboardInterrupt:
         stop_event.set()  # Ensure the program stops on interrupt
 
