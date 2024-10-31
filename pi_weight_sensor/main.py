@@ -66,9 +66,9 @@ def main():
         # Continuously fetch the weight reading until Keyboard Interrupt
         while not stop_event.is_set():
             current_weight = weighting.get_weight()
+            pounds = current_weight / 453.592
             print(f"Current Weight: {current_weight}g")
-
-            payload_dict['weight'] = current_weight
+            payload_dict['weight'] = pounds
             print(payload_dict)
             client.send_data(payload_dict)  # Send to Ubidots dashboard
             time.sleep(0.2)

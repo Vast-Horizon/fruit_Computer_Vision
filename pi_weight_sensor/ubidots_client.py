@@ -61,7 +61,7 @@ class UbidotsClient:
             time.sleep(1)
 
         # Log and handle request results
-        print(req.status_code, req.json())
+        # print(req.status_code, req.json())
         if status >= 400:
             print("[ERROR] Could not send data after 5 attempts, please check your token and connection")
             return False
