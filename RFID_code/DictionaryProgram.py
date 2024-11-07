@@ -50,4 +50,19 @@ def main():
             (status, uid) = MIFAREReader.MFRC522_Anticoll()
 
             if status == MIFAREReader.MI_OK:
-                # Co
+                # Convert UID to a readable string
+                uid_str = ",".join([str(x) for x in uid])
+                print(f"Card UID: {uid_str}")
+
+                # Get user inputs for item details
+                item_name = input("Enter Item Name: ")
+                item_price = float(input("Enter Item Price: "))
+
+                # Save to file
+                save_to_file(uid_str, item_name, item_price)
+
+                # Reset the reader for the next scan
+                print("Ready to scan the next card...\n")
+
+if __name__ == "__main__":
+    main()
