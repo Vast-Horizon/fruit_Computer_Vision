@@ -49,6 +49,8 @@ def main():
     data = load_data()
 
     while continue_reading:
+        print("Waiting to scan a tag...")
+        
         # Scan for cards    
         (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
 
@@ -67,7 +69,8 @@ def main():
                 # Display item details for the scanned UID
                 display_item(uid_str, data)
 
-                print("Ready to scan the next card...\n")
+                # Wait for user to press Enter before scanning again
+                input("\nPress Enter to scan another tag...\n")
 
 if __name__ == "__main__":
     main()
