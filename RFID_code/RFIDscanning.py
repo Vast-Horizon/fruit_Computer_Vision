@@ -10,7 +10,7 @@ continue_reading = True
 # Capture SIGINT for cleanup when the script is aborted
 def end_read(signal, frame):
     global continue_reading
-    print("Ctrl+C captured, ending read.")
+    print("\nCtrl+C captured, ending read.")
     continue_reading = False
 
 # Hook the SIGINT
@@ -48,15 +48,15 @@ def main():
     global continue_reading
     data = load_data()
 
+    print("Waiting to scan a tag...")
+
     while continue_reading:
-        print("Waiting to scan a tag...")
-        
         # Scan for cards    
         (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
 
         # If a card is found
         if status == MIFAREReader.MI_OK:
-            print("Card detected")
+            print("\nCard detected")
 
             # Get the UID of the card
             (status, uid) = MIFAREReader.MFRC522_Anticoll()
