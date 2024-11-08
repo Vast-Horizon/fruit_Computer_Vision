@@ -26,17 +26,42 @@ file_path = "rfid_data.txt"
 if not os.path.exists(file_path):
     open(file_path, 'w').close()
 
-# Function to write data to a file
-def save_to_file(uid, item_name, item_price):
-    with open(file_path, 'a') as file:
-        file.write(f"UID: {uid}\n")
-        file.write(f"Item Name: {item_name}\n")
-        file.write(f"Item Price: {item_price:.2f}\n")
-        file.write("-" * 30 + "\n")
+# Read the file into a dictionary
+def load_data():
+    data = {}
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            for i in range(0, len(lines), 4):
+                uid = lines[i].strip().split(": ")[1]
+                item_name = lines[i + 1].strip().split(": ")[1]
+                item_price = float(lines[i + 2].strip().split(": ")[1])
+                data[uid] = (item_name, item_price)
+    return data
+
+# Save data back to file
+def save_all_data(data):
+    with open(file_path, 'w') as file:
+        for uid, (item_name, item_price) in data.items():
+            file.write(f"UID: {uid}\n")
+            file.write(f"Item Name: {item_name}\n")
+            file.write(f"Item Price: {item_price:.2f}\n")
+            file.write("-" * 30 + "\n")
+
+# Function to save or update data
+def save_or_update(uid, item_name, item_price, data):
+    if uid in data:
+        print(f"UID {uid} found. Updating item details.")
+    else:
+        print(f"UID {uid} not found. Adding new entry.")
+    
+    data[uid] = (item_name, item_price)
+    save_all_data(data)
     print(f"Data saved for UID {uid}")
 
 def main():
     global continue_reading
+    data = load_data()
 
     while continue_reading:
         # Scan for cards    
@@ -58,10 +83,9 @@ def main():
                 item_name = input("Enter Item Name: ")
                 item_price = float(input("Enter Item Price: "))
 
-                # Save to file
-                save_to_file(uid_str, item_name, item_price)
+                # Save or update the file
+                save_or_update(uid_str, item_name, item_price, data)
 
-                # Reset the reader for the next scan
                 print("Ready to scan the next card...\n")
 
 if __name__ == "__main__":
