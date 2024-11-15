@@ -8,15 +8,15 @@ class UbidotsClient:
         self.device_label = device_label
         self.headers = {"X-Auth-Token": self.token, "Content-Type": "application/json"}
         self.payload_dict_default = {
-        "predict1": "tomato",
+        "predict1": "", # Example: Apple
         "detecting": 0,
         "selection": 0,
         "re_detect": 0,
-        "weight": 5,
+        "weight": 0,
         "price": 0,
         "total": 0,
         "payment": 0,
-        "results": "tomato, apple"
+        "results": "" # Example: "tomato, apple"
         }
 
     def get_default_payload(self):
