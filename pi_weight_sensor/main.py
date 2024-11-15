@@ -48,7 +48,7 @@ def main():
 
     # Enable simulation modes for testing
     weighting.testing_only(enable_simulation=False)
-    recognition.enable_simulation(enable_simulation=True)
+    recognition.enable_simulation(enable_simulation=False)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
@@ -62,29 +62,31 @@ def main():
     recognition_thread.start()
     weighting_thread.start()
 
-    try:
-        # Continuously fetch the weight reading until Keyboard Interrupt
-        while not stop_event.is_set():
-            current_weight = weighting.get_weight()
-            pounds = current_weight / 453.592
-            print(f"Current Weight: {current_weight}g")
-            payload_dict['weight'] = pounds
-            print(payload_dict)
-            client.send_data(payload_dict)  # Send to Ubidots dashboard
-            time.sleep(0.2)
+    # try:
+    #     # Continuously fetch the weight reading until Keyboard Interrupt
+    #     while not stop_event.is_set():
+    #         current_weight = weighting.get_weight()
+    #         pounds = current_weight / 453.592
+    #         print(f"Current Weight: {current_weight}g")
+    #         payload_dict['weight'] = pounds
+    #         print(payload_dict)
+    #         client.send_data(payload_dict)  # Send to Ubidots dashboard
+    #         time.sleep(0.2)
+    #
+    # except KeyboardInterrupt:
+    #     stop_event.set()
 
+    try:
+        while not stop_event.is_set():
+            top_prediction = recognition.get_top_prediction()
+            if top_prediction:
+                print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
+
+            # if current_weight > 0.2:
+            #     pass #tigger the recognition_thread
+            time.sleep(0.2)
     except KeyboardInterrupt:
         stop_event.set()
-
-
-    # for _ in range(n * 5):  # Runs 1*5 times because 1s has 5 0.2s
-    #     # top_prediction = recognition.get_top_prediction()
-    #     # if top_prediction:
-    #     #     print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
-    #
-    #     if current_weight > 0.2:
-    #         pass #tigger the recognition_thread
-    #     time.sleep(0.2)  # Same delay as in Weighting class
 
     # time.sleep(n)
     print("Stopping recognition and weighting...")
