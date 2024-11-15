@@ -47,8 +47,8 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weighting.testing_only(enable_simulation=False)
-    recognition.enable_simulation(enable_simulation=False)
+    weighting.testing_only(enable_simulation=True)
+    recognition.enable_simulation(enable_simulation=True)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
@@ -80,7 +80,7 @@ def main():
         while not stop_event.is_set():
             top_prediction = recognition.get_top_prediction()
             if top_prediction:
-                print(f"Current Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
+                print(f"Current Top Prediction: {top_prediction[0]}")
                 payload_dict['predict1'] = top_prediction[0]
                 client.send_data(payload_dict)
             # if current_weight > 0.2:

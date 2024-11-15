@@ -39,10 +39,10 @@ class Recognition:
             self.picam2.configure(config)
             self.frame_count = 0
             self.process_every_n_frames = process_every_n_frames
-            self.running = True  # Flag to control the loop
         except NameError:
             pass
 
+        self.running = True  # Flag to control the loop
         self.top_prediction = None  # Store top prediction
 
 
@@ -84,11 +84,19 @@ class Recognition:
 
     def get_top_prediction(self):
         """Returns the top prediction (class and confidence)."""
+        if self.simulation_mode:
+            try:
+                self.simulate_recognition()
+            except KeyboardInterrupt:
+                print("Simulation stopped...")
         return self.top_prediction
 
     def start_recognition(self):
         if self.simulation_mode:
-            self.simulate_recognition()
+            try:
+                self.simulate_recognition()
+            except KeyboardInterrupt:
+                print("Simulation stopped...")
         else:
             self.picam2.start()
             try:
@@ -118,17 +126,11 @@ class Recognition:
     def simulate_recognition(self):
         """Simulates recognition by setting a random fruit as the top prediction."""
         fruits = ["apple", "banana", "orange", "strawberry", "grape", "pineapple", "mango"]
-        try:
-            while self.running:
-                # Randomly choose a fruit as the top prediction every 0.2 seconds
-                random_fruit = random.choice(fruits)
-                self.top_prediction = (random_fruit, random.uniform(0.8, 1.0))  # High confidence
-                print(f"Simulated Top Prediction: {self.top_prediction[0]} ({self.top_prediction[1]:.2f})")
-                time.sleep(0.2)
-        except KeyboardInterrupt:
-            pass
-        finally:
-            print("Simulation stopped.")
+        # Randomly choose a fruit as the top prediction every 0.2 seconds
+        random_fruit = random.choice(fruits)
+        self.top_prediction = (random_fruit, random.uniform(0.8, 1.0))  # High confidence
+        print(f"Simulated Top Prediction: {self.top_prediction[0]} ({self.top_prediction[1]:.2f})")
+        #time.sleep(0.2)
 
     def enable_simulation(self, enable_simulation=True):
         """Enables or disables simulation mode."""
