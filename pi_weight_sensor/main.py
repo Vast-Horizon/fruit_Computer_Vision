@@ -47,8 +47,8 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weighting.testing_only(enable_simulation=True)
-    recognition.enable_simulation(enable_simulation=True)
+    weighting.testing_only(enable_simulation=False)
+    recognition.enable_simulation(enable_simulation=False)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
@@ -62,32 +62,39 @@ def main():
     recognition_thread.start()
     weighting_thread.start()
 
-    # try:
-    #     # Continuously fetch the weight reading until Keyboard Interrupt
-    #     while not stop_event.is_set():
-    #         current_weight = weighting.get_weight()
-    #         pounds = current_weight / 453.592
-    #         print(f"Current Weight: {current_weight}g")
-    #         payload_dict['weight'] = pounds
-    #         print(payload_dict)
-    #         client.send_data(payload_dict)  # Send to Ubidots dashboard
-    #         time.sleep(0.2)
-    #
-    # except KeyboardInterrupt:
-    #     stop_event.set()
-
     try:
+        # Continuously fetch the weight reading until Keyboard Interrupt
         while not stop_event.is_set():
+            current_weight = weighting.get_weight()
+            pounds = current_weight / 453.592
+            print(f"Current Weight: {current_weight}g")
+            payload_dict['weight'] = pounds
+            print(payload_dict)
+
             top_prediction = recognition.get_top_prediction()
             if top_prediction:
                 print(f"Current Top Prediction: {top_prediction[0]}")
                 payload_dict['predict1'] = top_prediction[0]
-                client.send_data(payload_dict)
-            # if current_weight > 0.2:
-            #     pass #tigger the recognition_thread
+
+            client.send_data(payload_dict)  # Send to Ubidots dashboard
             time.sleep(0.2)
+
     except KeyboardInterrupt:
         stop_event.set()
+
+    # try:
+    #     # Continuously fetch the top prediction until Keyboard Interrupt
+    #     while not stop_event.is_set():
+    #         top_prediction = recognition.get_top_prediction()
+    #         if top_prediction:
+    #             print(f"Current Top Prediction: {top_prediction[0]}")
+    #             payload_dict['predict1'] = top_prediction[0]
+    #             client.send_data(payload_dict)
+    #         # if current_weight > 0.2:
+    #         #     pass #tigger the recognition_thread
+    #         time.sleep(0.2)
+    # except KeyboardInterrupt:
+    #     stop_event.set()
 
     # time.sleep(n)
     print("Stopping recognition and weighting...")
