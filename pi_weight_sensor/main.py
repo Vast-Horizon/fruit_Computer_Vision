@@ -47,13 +47,13 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weighting.testing_only(enable_simulation=False)
-    recognition.enable_simulation(enable_simulation=False)
+    weighting.testing_only(enable_simulation=True)
+    recognition.enable_simulation(enable_simulation=True)
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
     fruits_list = []
-
+    total_price = 0
     # Create threads for both processes
     recognition_thread = threading.Thread(target=recognition.start_recognition)
     weighting_thread = threading.Thread(target=weighting.start)
@@ -64,14 +64,15 @@ def main():
     weighting_thread.start()
 
     try:
-        # Continuously fetch the weight reading until Keyboard Interrupt
         while not stop_event.is_set():
+            # Continuously fetch the weight reading until Keyboard Interrupt
             current_weight = weighting.get_weight()
             pounds = current_weight / 453.592
             print(f"Current Weight: {current_weight}g")
             payload_dict['weight'] = pounds
             print(payload_dict)
 
+            # Continuously fetch the top prediction until Keyboard Interrupt
             top_prediction = recognition.get_top_prediction()
             if top_prediction:
                 print(f"Current Top Prediction: {top_prediction[0]}")
@@ -80,6 +81,11 @@ def main():
                 results_string = ", ".join(fruits_list)
                 payload_dict['results'] = results_string
 
+            # Continuously fetch the price until Keyboard Interrupt
+            price = 2 * pounds # Assuming the items are all $2 per lb.
+            payload_dict['price'] = price
+            total_price += price
+            payload_dict['total'] = total_price
             client.send_data(payload_dict)  # Send to Ubidots dashboard
             time.sleep(0.2)
 
