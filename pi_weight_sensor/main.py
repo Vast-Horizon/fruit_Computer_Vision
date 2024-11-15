@@ -96,8 +96,10 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weighting.testing_only(enable_simulation=True)
-    recognition.enable_simulation(enable_simulation=True)
+    weight_sim = False
+    recog_sim = True
+    weighting.testing_only(enable_simulation=weight_sim)
+    recognition.enable_simulation(enable_simulation=recog_sim)
 
     input("Start Recognition? (Hit Enter to start)")
     fruits_list = []
@@ -113,7 +115,10 @@ def main():
 
     # Initialize state variables
     item_detected = False
-    weight_threshold = 0.2
+    if weight_sim:
+        weight_threshold = 7
+    else:
+        weight_threshold = 0.2
 
     try:
         while not stop_event.is_set():
