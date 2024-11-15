@@ -27,7 +27,7 @@ class UbidotsClient:
         try:
             url = f"http://industrial.api.ubidots.com/api/v1.6/devices/{self.device_label}/{variable}/"
             req = requests.get(url=url, headers=self.headers)
-            print("get_request req:", req.json())
+            #print("get_request req:", req.json())
             return req.json()['last_value']['value']
         except Exception as e:
             print(f"Error in get_request: {e}")
@@ -111,3 +111,6 @@ if __name__ == '__main__':
         # Send to Ubidots
         client.send_data(payload_dict)
         time.sleep(2)
+
+        #Test get request
+        print(client.get_request("selection"))
