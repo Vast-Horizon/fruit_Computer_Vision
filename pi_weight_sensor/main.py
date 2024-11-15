@@ -51,7 +51,6 @@ def main():
     recognition.enable_simulation(enable_simulation=True)
 
     input("Start Recognition? (Hit Enter to start)")
-    n = 1  # Default duration (in seconds)
     fruits_list = []
     total_price = 0
     # Create threads for both processes
@@ -106,7 +105,6 @@ def main():
     # except KeyboardInterrupt:
     #     stop_event.set()
 
-    # time.sleep(n)
     print("Stopping recognition and weighting...")
     recognition.stop()
     weighting.stop()
