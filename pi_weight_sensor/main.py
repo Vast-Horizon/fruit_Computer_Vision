@@ -52,6 +52,7 @@ def main():
 
     input("Start Recognition? (Hit Enter to start)")
     n = 1  # Default duration (in seconds)
+    fruits_list = []
 
     # Create threads for both processes
     recognition_thread = threading.Thread(target=recognition.start_recognition)
@@ -75,6 +76,9 @@ def main():
             if top_prediction:
                 print(f"Current Top Prediction: {top_prediction[0]}")
                 payload_dict['predict1'] = top_prediction[0]
+                fruits_list.append(top_prediction[0])
+                results_string = ", ".join(fruits_list)
+                payload_dict['results'] = results_string
 
             client.send_data(payload_dict)  # Send to Ubidots dashboard
             time.sleep(0.2)
