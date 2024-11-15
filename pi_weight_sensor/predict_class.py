@@ -102,7 +102,7 @@ class Recognition:
                         predictions = self.prpredict_top_class(frame)
 
                         # Log the predictions to the console
-                        self.log_predictions(predictions)
+                        #self.log_predictions(predictions)
                         self.top_prediction = predictions[0]
 
             except KeyboardInterrupt:

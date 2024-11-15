@@ -80,8 +80,9 @@ def main():
         while not stop_event.is_set():
             top_prediction = recognition.get_top_prediction()
             if top_prediction:
-                print(f"Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
-
+                print(f"Current Top Prediction: {top_prediction[0]}") #not working yet in simulation mode
+                payload_dict['predict1'] = top_prediction[0]
+                client.send_data(payload_dict)
             # if current_weight > 0.2:
             #     pass #tigger the recognition_thread
             time.sleep(0.2)
