@@ -86,7 +86,7 @@ try:
             corrected_value = abs(value - tare) * calibration_factor/offset_factor * 1000
             print("Raw:", value, " Corrected:", corrected_value, "g")
         if not tare_Flag:
-            corrected_value = abs(value - 8392790) * calibration_factor / offset_factor * 1000
+            corrected_value = abs(value - 8398000) * calibration_factor / offset_factor * 1000
             print("Raw:", value, " Corrected:", corrected_value, "g")
         time.sleep(0.5)
 
