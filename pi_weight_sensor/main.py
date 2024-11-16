@@ -132,7 +132,7 @@ def main():
             # Detect when the weight goes above 0.2g for the first time
             if current_weight > weight_threshold and not item_detected:
                 # Trigger camera recognition
-                top_prediction = recognition.get_top_prediction()
+                top_prediction = recognition.get_top_prediction() # We may want to do this more than once.
                 if top_prediction:
                     print(f"Current Top Prediction: {top_prediction[0]}")
                     payload_dict['predict1'] = top_prediction[0]
