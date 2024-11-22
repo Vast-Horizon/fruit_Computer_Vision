@@ -11,12 +11,13 @@ class UbidotsClient:
         "predict1": "", # Example: Apple
         "detecting": 0,
         "selection": 0,
-        "re_detect": 0,
         "weight": 0,
         "price": 0,
         "total": 0,
         "payment": 0,
-        "results": "" # Example: "tomato, apple"
+        "reset": 0,
+        "results": "", # Example: "tomato, apple"
+        "qrcode": ""
         }
 
     def get_default_payload(self):
@@ -45,7 +46,11 @@ class UbidotsClient:
             'price': {"value": payload_dict['price']},
             'total': {"value": payload_dict['total']},
             'payment': {"value": payload_dict['payment']},
+            'reset':{"value": payload_dict['reset']},
+            'QRcode': {"value": 99, "context": {"abc": payload_dict['qrcode']}},
         }
+
+        #payload = {"QRcode": {"value": 800, "context": {"abc": "https://i.ibb.co/StXdGRp/qrcode.png"}}}
 
         return payload
 
@@ -87,12 +92,13 @@ if __name__ == '__main__':
         "predict1": "tomato",
         "detecting": 0,
         "selection": 0,
-        "re_detect": 0,
         "weight": 5,
         "price": 0,
         "total": 0,
         "payment": 0,
-        "results": "tomato, apple"
+        "results": "tomato, apple",
+        "reset": 0,
+        "qrcode": "https://i.ibb.co/StXdGRp/qrcode.png"
     }
     fruits_list = []
     while True:
@@ -114,3 +120,7 @@ if __name__ == '__main__':
 
         #Test get request
         print(client.get_request("selection"))
+
+
+    # payload_dict = {"QRcode": {"value": 800, "context": {"QRCode": "http://openweathermap.org/img/wn/01d@2x.png"}}}
+    # client.send_data(payload_dict)

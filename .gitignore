@@ -14,3 +14,4 @@ model_log/
 #Ignore venv
 venv/
 CV_training/
+/pi_weight_sensor/qrcode.png
