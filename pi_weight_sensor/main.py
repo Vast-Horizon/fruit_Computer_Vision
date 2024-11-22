@@ -213,6 +213,7 @@ def main():
     def start_threads():
         nonlocal recognition_thread, weighting_thread
         if not recognition_thread.is_alive() or not weighting_thread.is_alive():
+            print("Yeah! starting")
             stop_event.clear()
             recognition_thread = threading.Thread(target=recognition.start_recognition)
             weighting_thread = threading.Thread(target=weighting.start)
@@ -242,6 +243,8 @@ def main():
             reset_button = client.get_request("reset")
             if reset_button == 1:
                 payload_dict['reset'] = 0
+                fruits_list = []
+                total_price = 0
                 print("Reset button pressed. Starting/restarting threads.")
                 payload_dict = client.get_default_payload()
                 client.send_data(payload_dict)

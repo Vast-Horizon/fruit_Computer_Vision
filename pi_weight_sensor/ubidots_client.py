@@ -21,6 +21,18 @@ class UbidotsClient:
         }
 
     def get_default_payload(self):
+        self.payload_dict_default = {
+        "predict1": "", # Example: Apple
+        "detecting": 0,
+        "selection": 0,
+        "weight": 0,
+        "price": 0,
+        "total": 0,
+        "payment": 0,
+        "reset": 0,
+        "results": "", # Example: "tomato, apple"
+        "qrcode": ""
+        }
         return self.payload_dict_default
 
     def get_request(self, variable):
