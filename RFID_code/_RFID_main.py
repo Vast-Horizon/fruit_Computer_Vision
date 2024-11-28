@@ -1,4 +1,4 @@
-from rfid_reader import RFIDReader
+from RFID_class import RFIDReader
 import time
 
 
