@@ -75,11 +75,11 @@ class RFIDReader:
         return self.latest_tag
 
 
-# Capture SIGINT to stop the RFID reader gracefully
-def signal_handler(signal, frame):
-    print("\nCtrl+C captured, stopping RFID Reader.")
-    rfid_reader.stop()
-    exit(0)
-
-
-signal.signal(signal.SIGINT, signal_handler)
+# # Capture SIGINT to stop the RFID reader gracefully
+# def signal_handler(signal, frame):
+#     print("\nCtrl+C captured, stopping RFID Reader.")
+#     rfid_reader.stop()
+#     exit(0)
+#
+#
+# signal.signal(signal.SIGINT, signal_handler)
