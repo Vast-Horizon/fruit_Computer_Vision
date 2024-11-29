@@ -1,0 +1,60 @@
+UID: 217,61,113,131,22
+Item Name: Lays Chips
+Item Price: 4.99
+------------------------------
+UID: 167,106,12,1,192
+Item Name: Power Drill
+Item Price: 74.99
+------------------------------
+UID: 201,96,39,131,13
+Item Name: Tomato Soup
+Item Price: 6.99
+------------------------------
+UID: 222,8,12,1,219
+Item Name: Frosted Flakes
+Item Price: 8.99
+------------------------------
+UID: 67,190,199,247,205
+Item Name: Water Bottle
+Item Price: 1.99
+------------------------------
+UID: 240,213,18,121,78
+Item Name: Cat Food
+Item Price: 16.99
+------------------------------
+UID: 64,214,18,121,253
+Item Name: Tampons
+Item Price: 14.99
+------------------------------
+UID: 192,213,18,121,126
+Item Name: Pads
+Item Price: 11.99
+------------------------------
+UID: 32,214,18,121,157
+Item Name: Ben and Jerrys
+Item Price: 6.99
+------------------------------
+UID: 48,214,18,121,141
+Item Name: Toothpaste
+Item Price: 3.99
+------------------------------
+UID: 176,213,18,121,14
+Item Name: Tomato
+Item Price: 3.49
+------------------------------
+UID: 0,214,18,121,189
+Item Name: Banana
+Item Price: 3.99
+------------------------------
+UID: 224,213,18,121,94
+Item Name: Toaster Oven
+Item Price: 29.99
+------------------------------
+UID: 208,213,18,121,110
+Item Name: Olives
+Item Price: 7.99
+------------------------------
+UID: 16,214,18,121,173
+Item Name: Orange Juice
+Item Price: 8.99
+------------------------------
