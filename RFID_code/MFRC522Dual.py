@@ -4,7 +4,6 @@ import RPi.GPIO as GPIO
 import spidev
 
 class MFRC522:
-
     MI_OK = 0
     MI_NOTAGERR = 1
     MI_ERR = 2
@@ -47,35 +46,51 @@ class MFRC522:
         return (status, back_data)
 
     def MFRC522_ToCard(self, command, send_data):
-        # Implementation of the communication logic
-        pass
+        back_data = []
+        back_len = 0
+        irq_en = 0x77
+        wait_irq = 0x30
+
+        self.Write_MFRC522(0x02, irq_en | 0x80)  # Enable IRQs
+        self.Write_MFRC522(0x04, 0x00)          # Clear all IRQ bits
+        self.Write_MFRC522(0x09, 0x80)          # Flush FIFO
+        for data in send_data:
+            self.Write_MFRC522(0x09, data)      # Write data to FIFO
+        self.Write_MFRC522(0x01, command)       # Execute command
+
+        # Wait for response
+        i = 2000
+        while i > 0:
+            irq_val = self.Read_MFRC522(0x04)
+            if irq_val & 0x01 or irq_val & wait_irq:
+                break
+            i -= 1
+
+        if i == 0:
+            return (self.MI_ERR, None)
+
+        if (self.Read_MFRC522(0x06) & 0x1B) == 0x00:
+            back_len = self.Read_MFRC522(0x0A)
+            back_data = []
+            for _ in range(back_len):
+                back_data.append(self.Read_MFRC522(0x09))
+            return (self.MI_OK, back_data)
+        else:
+            return (self.MI_ERR, None)
 
     def MFRC522_Anticoll(self):
-        back_data = []
-        ser_num_check = 0
-        ser_num = []
-
-        self.Write_MFRC522(0x0D, 0x00)
-
-        back_len = 0
+        self.Write_MFRC522(0x0D, 0x00)  # Clear collision register
         (status, back_data) = self.MFRC522_ToCard(0x0C, [0x93, 0x20])
-
         if status == self.MI_OK:
             if len(back_data) == 5:
+                checksum = 0
                 for i in range(4):
-                    ser_num_check = ser_num_check ^ back_data[i]
-                if ser_num_check != back_data[4]:
-                    status = self.MI_ERR
+                    checksum ^= back_data[i]
+                if checksum != back_data[4]:
+                    return (self.MI_ERR, None)
             else:
-                status = self.MI_ERR
-
+                return (self.MI_ERR, None)
         return (status, back_data)
-
-    def MFRC522_SelectTag(self, uid):
-        buf = [0x93, 0x70] + uid[:5]
-        buf.append(0x00)
-        self.Write_MFRC522(0x0D, 0x00)
-        self.MFRC522_ToCard(0x0C, buf)
 
     def MFRC522_StopCrypto1(self):
         self.Write_MFRC522(0x0C, 0x00)
@@ -88,12 +103,12 @@ class MFRC522:
     def MFRC522_Read(self, block_addr):
         recv_data = [0x30, block_addr]
         (status, back_data) = self.MFRC522_ToCard(0x0C, recv_data)
-        if not (status == self.MI_OK):
+        if status != self.MI_OK:
             print("Error while reading!")
         return back_data
 
     def MFRC522_Write(self, block_addr, write_data):
         buff = [0xA0, block_addr] + write_data[:16]
         (status, back_data) = self.MFRC522_ToCard(0x0C, buff)
-        if not (status == self.MI_OK):
+        if status != self.MI_OK:
             print("Error while writing!")
