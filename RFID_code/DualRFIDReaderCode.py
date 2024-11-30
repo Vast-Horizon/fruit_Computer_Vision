@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-import MFRC522
+import MFRC522Dual as MFRC522  # Updated import to match the new module name
 import signal
 import os
 import RPi.GPIO as GPIO
@@ -43,10 +43,10 @@ def display_item(uid, data):
     else:
         print(f"No data found for UID: {uid}")
 
-# Initialize two RFID readers
+# Initialize two RFID readers with separate CS pins
 def initialize_readers():
-    reader1 = MFRC522.MFRC522(cs=0)  # Reader 1 with CS pin GPIO 8 (default SPI bus 0)
-    reader2 = MFRC522.MFRC522(cs=1)  # Reader 2 with CS pin GPIO 7 (SPI bus 1)
+    reader1 = MFRC522.MFRC522(cs_pin=24)  # Reader 1 with CS pin GPIO 24
+    reader2 = MFRC522.MFRC522(cs_pin=25)  # Reader 2 with CS pin GPIO 25
     return reader1, reader2
 
 def main():
@@ -57,21 +57,21 @@ def main():
     print("Waiting to scan a tag...")
 
     while continue_reading:
-        for reader in (reader1, reader2):
+        for i, reader in enumerate((reader1, reader2), start=1):
             # Scan for cards
-            (status, TagType) = reader.MFRC522_Request(reader.PICC_REQIDL)
+            (status, TagType) = reader.MFRC522_Request(0x26)  # Use PICC_REQIDL for card detection
 
             # If a card is found
-            if status == reader.MI_OK:
-                print("\nCard detected")
+            if status == MFRC522.MFRC522.MI_OK:
+                print(f"\nCard detected by Reader {i}")
 
                 # Get the UID of the card
                 (status, uid) = reader.MFRC522_Anticoll()
 
-                if status == reader.MI_OK:
-                    # Convert UID to a readable string
-                    uid_str = ",".join([str(x) for x in uid])
-                    print(f"Card UID: {uid_str}")
+                if status == MFRC522.MFRC522.MI_OK:
+                    # Convert UID to a readable string (hexadecimal format)
+                    uid_str = ":".join([f"{x:02X}" for x in uid])
+                    print(f"Reader {i} - Card UID: {uid_str}")
 
                     # Display item details for the scanned UID
                     display_item(uid_str, data)
