@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-import MFRC522Dual as MFRC522  # Updated import to match the new module name
+import MFRC522Dual as MFRC522  # Updated module name
 import signal
 import os
 import RPi.GPIO as GPIO
@@ -43,10 +43,10 @@ def display_item(uid, data):
     else:
         print(f"No data found for UID: {uid}")
 
-# Initialize two RFID readers with separate CS pins
+# Initialize two RFID readers using GPIO8 (CE0#) and GPIO7 (CE1#)
 def initialize_readers():
-    reader1 = MFRC522.MFRC522(cs_pin=24)  # Reader 1 with CS pin GPIO 24
-    reader2 = MFRC522.MFRC522(cs_pin=25)  # Reader 2 with CS pin GPIO 25
+    reader1 = MFRC522.MFRC522(spi_bus=0, spi_device=0)  # Reader 1 on GPIO8 (CE0#)
+    reader2 = MFRC522.MFRC522(spi_bus=0, spi_device=1)  # Reader 2 on GPIO7 (CE1#)
     return reader1, reader2
 
 def main():
@@ -58,6 +58,9 @@ def main():
 
     while continue_reading:
         for i, reader in enumerate((reader1, reader2), start=1):
+            if reader is None:
+                continue
+
             # Scan for cards
             (status, TagType) = reader.MFRC522_Request(0x26)  # Use PICC_REQIDL for card detection
 
@@ -69,7 +72,7 @@ def main():
                 (status, uid) = reader.MFRC522_Anticoll()
 
                 if status == MFRC522.MFRC522.MI_OK:
-                    # Convert UID to a readable string (hexadecimal format)
+                    # Convert UID to a readable string
                     uid_str = ":".join([f"{x:02X}" for x in uid])
                     print(f"Reader {i} - Card UID: {uid_str}")
 
