@@ -217,8 +217,8 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weight_sim = False
-    recog_sim = False
+    weight_sim = True
+    recog_sim = True
     weighting.testing_only(enable_simulation=weight_sim)
     recognition.enable_simulation(enable_simulation=recog_sim)
 
@@ -260,7 +260,8 @@ def main():
             if pay_button == 1 and active:
                 print("Payment initiated. Sending QR code.")
                 payload_dict['payment'] = 0
-                payload_dict['qrcode'] = "https://i.ibb.co/StXdGRp/qrcode.png"
+                #payload_dict['qrcode'] = "https://i.ibb.co/StXdGRp/qrcode.png" #larger qr code
+                payload_dict['qrcode'] = "https://i.ibb.co/DGHbkcK/qrcode.png"
                 client.send_data(payload_dict)
                 print("Data sending paused. Waiting for reset button.")
                 active = False  # Pause data sending
