@@ -31,7 +31,7 @@ class UbidotsClient:
         "payment": 0,
         "reset": 0,
         "results": "", # Example: "tomato, apple"
-        "qrcode": ""
+        "qrcode": "https://i.ibb.co/Qfd808j/spacer.png"
         }
         return self.payload_dict_default
 
