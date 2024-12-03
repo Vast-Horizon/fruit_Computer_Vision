@@ -312,6 +312,9 @@ def main():
                 # Reset detection if weight is removed (goes below threshold)
                 if current_weight < weight_threshold:
                     item_detected = False
+                    payload_dict['predict1'] = ""
+                    payload_dict['price'] = 0
+                    client.send_data(payload_dict)
 
             time.sleep(0.5)  # Main loop interval
 
