@@ -24,8 +24,9 @@ class Recognition:
             self.input_details = self.interpreter.get_input_details()
             self.output_details = self.interpreter.get_output_details()
             self.input_shape = self.input_details[0]['shape']
+            print(self.input_shape)
         except NameError:
-            pass
+            print('Rognition class nameError triggered')
 
         # Load class labels
         with open(class_indices_path, 'r') as f:
