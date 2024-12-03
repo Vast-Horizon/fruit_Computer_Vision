@@ -217,8 +217,8 @@ def main():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weight_sim = True
-    recog_sim = True
+    weight_sim = False
+    recog_sim = False
     weighting.testing_only(enable_simulation=weight_sim)
     recognition.enable_simulation(enable_simulation=recog_sim)
 
