@@ -41,6 +41,7 @@ class UbidotsClient:
             url = f"http://industrial.api.ubidots.com/api/v1.6/devices/{self.device_label}/{variable}/"
             req = requests.get(url=url, headers=self.headers)
             #print("get_request req:", req.json())
+            print('.', end='.')
             return req.json()['last_value']['value']
         except Exception as e:
             print(f"Error in get_request: {e}")
