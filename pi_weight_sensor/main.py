@@ -225,7 +225,7 @@ def main():
     payload_dict = client.get_default_payload()
     fruits_list = []
     total_price = 0
-    weight_threshold = 7 if weight_sim else 0.2
+    weight_threshold = 7 if weight_sim else 20
 
     # Variable to control dashboard data sending
     active = False
