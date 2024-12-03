@@ -261,7 +261,7 @@ def main():
                 print("Payment initiated. Sending QR code.")
                 payload_dict['payment'] = 0
                 #payload_dict['qrcode'] = "https://i.ibb.co/StXdGRp/qrcode.png" #larger qr code
-                payload_dict['qrcode'] = "https://i.ibb.co/DGHbkcK/qrcode.png"
+                payload_dict['qrcode'] = "https://i.ibb.co/9WrDXgh/qrcode.png"
                 client.send_data(payload_dict)
                 print("Data sending paused. Waiting for reset button.")
                 active = False  # Pause data sending
