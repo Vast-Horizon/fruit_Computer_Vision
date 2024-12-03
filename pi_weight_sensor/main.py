@@ -95,14 +95,14 @@ def main_thread():
     weighting = Weighting(calibration_factor=0.00011765484757443882)
 
     # Enable simulation modes for testing
-    weight_sim = True
-    recog_sim = True
+    weight_sim = False
+    recog_sim = False
     weighting.testing_only(enable_simulation=weight_sim)
     recognition.enable_simulation(enable_simulation=recog_sim)
 
     fruits_list = []
     total_price = 0
-    weight_threshold = 7 if weight_sim else 0.2
+    weight_threshold = 5 if weight_sim else 0.2
 
     # Function to start or restart threads
     def start_threads():
@@ -168,6 +168,7 @@ def main_thread():
                 # Detect when the weight goes above threshold for the first time
                 if current_weight > weight_threshold and not item_detected:
                     top_prediction = recognition.get_top_prediction()
+                    # Add RFID here
                     if top_prediction:
                         print(f"Current Top Prediction: {top_prediction[0]}")
                         payload_dict['predict1'] = top_prediction[0]
