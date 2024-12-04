@@ -96,6 +96,8 @@ def real_time_detection(process_every_n_frames=2):
                 # Log the predictions to the console
                 log_predictions(frame_count, predictions)
 
+                time.sleep(0.5)
+
             # To stop the loop, press Ctrl+C
 
     except KeyboardInterrupt:
