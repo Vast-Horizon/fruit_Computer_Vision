@@ -6,8 +6,10 @@ You can also use main_continuous function to run forever until KeyboardInterrupt
 import threading
 from predict_class import Recognition
 from weight_class import Weighting
+from RFID_class import RFIDReader
 import time
 from ubidots_client import UbidotsClient
+
 
 TOKEN = "BBUS-zFNs6h6YSIb6EO1Bbk676Ab5thPCH6"
 DEVICE_LABEL = "cybercart"
@@ -215,6 +217,7 @@ def main_thread():
 def main():
     recognition = Recognition()
     weighting = Weighting(calibration_factor=0.00011765484757443882)
+    rfid_reader = RFIDReader()
 
     # Enable simulation modes for testing
     weight_sim = False
@@ -233,11 +236,14 @@ def main():
     # Initialize threads and stop_event
     recognition_thread = threading.Thread(target=recognition.start_recognition)
     weighting_thread = threading.Thread(target=weighting.start)
+    rfid_thread = threading.Thread(target=rfid_reader.start)
+
     stop_event = threading.Event()
 
     # Start threads
     recognition_thread.start()
     weighting_thread.start()
+    rfid_thread.start()
 
     # Variable to manage item detection state
     item_detected = False
@@ -324,14 +330,15 @@ def main():
     print("Stopping recognition and weighting...")
     recognition.stop()
     weighting.stop()
+    rfid_reader.stop()
 
     # Wait for both threads to finish
     recognition_thread.join()
     weighting_thread.join()
+    rfid_thread.join()
 
     print("Program ended.")
 
 
 if __name__ == "__main__":
-    #main_continuous()
     main()

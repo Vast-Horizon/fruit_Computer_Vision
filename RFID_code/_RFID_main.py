@@ -1,7 +1,7 @@
 '''
 This is a temporary main.py for running RFID class
 '''
-from RFID_class import RFIDReader
+from RFID_class_old import RFIDReader
 import time
 
 

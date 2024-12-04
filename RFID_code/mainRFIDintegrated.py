@@ -1,4 +1,4 @@
-from rfid_class import RFIDReader  # Assuming this is the correct class for RFID
+from RFID_class_old import RFIDReader  # Assuming this is the correct class for RFID
 
 def main():
     recognition = Recognition()
