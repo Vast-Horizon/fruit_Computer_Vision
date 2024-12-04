@@ -322,7 +322,7 @@ def main():
                     payload_dict['price'] = 0
                     client.send_data(payload_dict)
 
-            time.sleep(0.5)  # Main loop interval
+            time.sleep(1)  # Main loop interval
 
     except KeyboardInterrupt:
         stop_event.set()
