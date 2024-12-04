@@ -1,9 +1,12 @@
 import os
 import time
-
 import sys
-sys.path.append('./RFID_code')
+import os
+
+parent_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(parent_dir)
 from RFID_code import MFRC522
+
 
 class RFIDReader:
     def __init__(self, file_path="RFID_code/rfid_data.txt"):
