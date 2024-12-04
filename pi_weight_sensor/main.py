@@ -279,7 +279,6 @@ def main():
                 pounds = current_weight / 453.592
                 print(f"Current Weight: {current_weight}g")
                 payload_dict['weight'] = pounds
-                price = 2 * pounds
                 client.send_data(payload_dict)
 
                 # Detect when the weight goes above threshold for the first time
@@ -292,30 +291,30 @@ def main():
                         payload_dict['price'] = price
                         client.send_data(payload_dict)
 
-                    # Wait for 5 seconds for user confirmation
-                    start_time = time.time()
-                    while time.time() - start_time < 5:
-                        select_button = client.get_request("selection")
-                        if select_button == 1:
-                            fruits_list.append(top_prediction[0])
-                            results_string = ", ".join(fruits_list)
-                            payload_dict['results'] = results_string
-                            payload_dict['selection'] = 0
-                            total_price += price
-                            payload_dict['total'] = total_price
+                        # Wait for 5 seconds for user confirmation
+                        start_time = time.time()
+                        while time.time() - start_time < 5:
+                            select_button = client.get_request("selection")
+                            if select_button == 1:
+                                fruits_list.append(top_prediction[0])
+                                results_string = ", ".join(fruits_list)
+                                payload_dict['results'] = results_string
+                                payload_dict['selection'] = 0
+                                total_price += price
+                                payload_dict['total'] = total_price
+                                client.send_data(payload_dict)
+                                print("Item confirmed.")
+                                break
+                            time.sleep(0.2)
+
+                        # If not confirmed within 5 seconds, clear prediction and price
+                        if select_button == 0:
+                            print("Item not confirmed, clearing...")
+                            payload_dict['predict1'] = ""
+                            payload_dict['price'] = 0
                             client.send_data(payload_dict)
-                            print("Item confirmed.")
-                            break
-                        time.sleep(0.2)
 
-                    # If not confirmed within 5 seconds, clear prediction and price
-                    if select_button == 0:
-                        print("Item not confirmed, clearing...")
-                        payload_dict['predict1'] = ""
-                        payload_dict['price'] = 0
-                        client.send_data(payload_dict)
-
-                    item_detected = True
+                        item_detected = True
 
                 # Reset detection if weight is removed (goes below threshold)
                 if current_weight < weight_threshold:
