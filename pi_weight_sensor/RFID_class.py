@@ -9,7 +9,7 @@ from RFID_code import MFRC522
 
 
 class RFIDReader:
-    def __init__(self, file_path="RFID_code/rfid_data.txt"):
+    def __init__(self, file_path="../RFID_code/rfid_data.txt"):
         self.file_path = file_path
         self.data = self._load_data()
         self.mifare_reader = MFRC522.MFRC522()
