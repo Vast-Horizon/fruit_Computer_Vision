@@ -2,7 +2,7 @@ import os
 import time
 
 import sys
-sys.path.append('../RFID_code')
+sys.path.append('./RFID_code')
 from RFID_code import MFRC522
 
 class RFIDReader:
