@@ -316,7 +316,6 @@ def main():
                             print("Item added via RFID.")
                             tag_detected = True
                             break
-                        time.sleep(0.2)
 
                     # If no tag is detected within 2 seconds, use the camera
                     if not tag_detected:
