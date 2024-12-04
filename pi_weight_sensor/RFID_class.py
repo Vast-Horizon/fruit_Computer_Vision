@@ -67,5 +67,7 @@ class RFIDReader:
         self.running = False
 
     def get(self):
-        """Retrieve the latest RFID tag data."""
-        return self.latest_tag
+        """Retrieve the latest RFID tag data and reset it."""
+        tag = self.latest_tag
+        self.latest_tag = None  # Reset latest_tag after retrieval
+        return tag

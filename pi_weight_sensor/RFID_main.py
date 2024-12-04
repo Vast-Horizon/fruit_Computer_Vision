@@ -23,7 +23,6 @@ def RFID_main():
         print("\nStopping RFID Reader...")
         rfid_reader.stop()
         rfid_thread.join()
-        print("RFID Reader stopped. Goodbye!")
 
 
 if __name__ == "__main__":
