@@ -16,7 +16,7 @@ Item Price: 8.99
 ------------------------------
 UID: 67,190,199,247,205
 Item Name: Water Bottle
-Item Price: 1.99
+Item Price: 1.79
 ------------------------------
 UID: 240,213,18,121,78
 Item Name: Cat Food
