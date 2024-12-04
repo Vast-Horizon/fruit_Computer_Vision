@@ -267,7 +267,6 @@ def main():
             if pay_button == 1 and active:
                 print("Payment initiated. Sending QR code.")
                 payload_dict['payment'] = 0
-                #payload_dict['qrcode'] = "https://i.ibb.co/StXdGRp/qrcode.png" #larger qr code
                 payload_dict['qrcode'] = "https://i.ibb.co/9WrDXgh/qrcode.png"
                 client.send_data(payload_dict)
                 print("Data sending paused. Waiting for reset button.")
@@ -283,38 +282,76 @@ def main():
 
                 # Detect when the weight goes above threshold for the first time
                 if current_weight > weight_threshold and not item_detected:
-                    top_prediction = recognition.get_top_prediction()
-                    if top_prediction:
-                        print(f"Current Top Prediction: {top_prediction[0]}")
-                        payload_dict['predict1'] = top_prediction[0]
-                        price = 2 * pounds  # Assuming the items are all $2 per lb.
-                        payload_dict['price'] = price
-                        client.send_data(payload_dict)
-
-                        # Wait for 5 seconds for user confirmation
-                        start_time = time.time()
-                        while time.time() - start_time < 5:
-                            select_button = client.get_request("selection")
-                            if select_button == 1:
-                                fruits_list.append(top_prediction[0])
-                                results_string = ", ".join(fruits_list)
-                                payload_dict['results'] = results_string
-                                payload_dict['selection'] = 0
-                                total_price += price
-                                payload_dict['total'] = total_price
-                                client.send_data(payload_dict)
-                                print("Item confirmed.")
-                                break
-                            time.sleep(0.2)
-
-                        # If not confirmed within 5 seconds, clear prediction and price
-                        if select_button == 0:
-                            print("Item not confirmed, clearing...")
-                            payload_dict['predict1'] = ""
-                            payload_dict['price'] = 0
+                    # Check for RFID tag first
+                    tag_detected = False
+                    start_time = time.time()
+                    while time.time() - start_time < 2:
+                        tag_data = rfid_reader.get()
+                        if tag_data:
+                            print(f"RFID Tag Detected: {tag_data}")
+                            payload_dict['predict1'] = tag_data['name']
+                            payload_dict['price'] = tag_data['price']
                             client.send_data(payload_dict)
 
-                        item_detected = True
+                            # Wait for 5 seconds for user confirmation
+                            start_time = time.time()
+                            while time.time() - start_time < 5:
+                                select_button = client.get_request("selection")
+                                if select_button == 1:
+                                    fruits_list.append(tag_data['name'])
+                                    total_price += tag_data['price']
+                                    payload_dict['results'] = ", ".join(fruits_list)
+                                    payload_dict['total'] = total_price
+                                    client.send_data(payload_dict)
+                                    break
+                                time.sleep(0.8) # 0.2 is better
+
+                            # If not confirmed within 5 seconds, clear prediction and price
+                            if select_button == 0:
+                                print("Item not confirmed, clearing...")
+                                payload_dict['predict1'] = ""
+                                payload_dict['price'] = 0
+                                client.send_data(payload_dict)
+
+                            print("Item added via RFID.")
+                            tag_detected = True
+                            break
+                        time.sleep(0.2)
+
+                    # If no tag is detected within 2 seconds, use the camera
+                    if not tag_detected:
+                        top_prediction = recognition.get_top_prediction()
+                        if top_prediction:
+                            print(f"Current Top Prediction: {top_prediction[0]}")
+                            payload_dict['predict1'] = top_prediction[0]
+                            price = 2 * pounds  # Assuming the items are all $2 per lb.
+                            payload_dict['price'] = price
+                            client.send_data(payload_dict)
+
+                            # Wait for 5 seconds for user confirmation
+                            start_time = time.time()
+                            while time.time() - start_time < 5:
+                                select_button = client.get_request("selection")
+                                if select_button == 1:
+                                    fruits_list.append(top_prediction[0])
+                                    results_string = ", ".join(fruits_list)
+                                    payload_dict['results'] = results_string
+                                    payload_dict['selection'] = 0
+                                    total_price += price
+                                    payload_dict['total'] = total_price
+                                    client.send_data(payload_dict)
+                                    print("Item confirmed.")
+                                    break
+                                time.sleep(0.8) # 0.2 is better
+
+                            # If not confirmed within 5 seconds, clear prediction and price
+                            if select_button == 0:
+                                print("Item not confirmed, clearing...")
+                                payload_dict['predict1'] = ""
+                                payload_dict['price'] = 0
+                                client.send_data(payload_dict)
+
+                    item_detected = True
 
                 # Reset detection if weight is removed (goes below threshold)
                 if current_weight < weight_threshold:
@@ -328,16 +365,15 @@ def main():
     except KeyboardInterrupt:
         stop_event.set()
 
-    print("Stopping recognition and weighting...")
+    print("Stopping recognition, weighting, and RFID reader...")
     recognition.stop()
     weighting.stop()
     rfid_reader.stop()
 
-    # Wait for both threads to finish
+    # Wait for all threads to finish
     recognition_thread.join()
     weighting_thread.join()
     rfid_thread.join()
 
-    print("Program ended.")
 if __name__ == "__main__":
     main()
