@@ -15,8 +15,8 @@ Item Name: Frosted Flakes
 Item Price: 8.99
 ------------------------------
 UID: 67,190,199,247,205
-Item Name: Water Bottle
-Item Price: 1.79
+Item Name: Lychee Juice Drink
+Item Price: 2.49
 ------------------------------
 UID: 240,213,18,121,78
 Item Name: Cat Food
@@ -39,7 +39,7 @@ Item Name: Toothpaste
 Item Price: 3.99
 ------------------------------
 UID: 176,213,18,121,14
-Item Name: Tomato
+Item Name: Breadboard
 Item Price: 3.49
 ------------------------------
 UID: 0,214,18,121,189
