@@ -58,7 +58,7 @@ class Weighting:
                     if tare_Flag:
                         self.current_weight = abs(value - tare) * self.calibration_factor / self.offset_factor * 1000
                     if not tare_Flag:
-                        self.current_weight = abs(value - 8398000) * self.calibration_factor / self.offset_factor * 1000
+                        self.current_weight = abs(value - 8420000) * self.calibration_factor / self.offset_factor * 1000
                     time.sleep(0.2)
         except KeyboardInterrupt:
             pass
